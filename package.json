@@ -1,0 +1,421 @@
+{
+  "name": "raja-vsextension",
+  "publisher": "myname",
+  "displayName": "Raja VsExtension",
+  "description": "Combined snippets manager and advanced folding extension for VS Code",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridwans2/raja-vsextension.git"
+  },
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "activationEvents": [
+    "onCommand:rajaSnippets.addGroup",
+    "onCommand:rajaSnippets.addSnippet",
+    "onCommand:rajaSnippets.insertSnippet",
+    "onCommand:rajaSnippets.runSnippet",
+    "onCommand:rajaSnippets.listSnippets",
+    "onCommand:rajaSnippets.exportSnippets",
+    "onCommand:rajaSnippets.importSnippets",
+    "onCommand:rajaSnippets.editOrDeleteSnippet",
+    "onCommand:rajaSnippets.showSnippetActions",
+    "onCommand:rajaSnippets.deleteSnippet",
+    "onCommand:rajaSnippets.addSnippetToGroup",
+    "onCommand:rajaSnippets.deleteGroupFromTree",
+    "onCommand:rajaSnippets.addGroupInline",
+    "onCommand:rajaSnippets.deleteGroup",
+    "onCommand:rajaSnippets.exportJson",
+    "onCommand:rajaSnippets.importJson",
+    "onCommand:rajaSnippets.refresh",
+    "onCommand:rajaSnippets.changeSnippetType",
+    "onCommand:rajaSnippets.openStorage",
+    "onCommand:rajaSnippets.showStoragePath",
+    "onCommand:rajaSnippets.configureStorage",
+    "onCommand:rajaSnippets.showAllSnippetActions",
+    "onCommand:rajaSnippets.showGroupActions",
+    "onView:rajaSnippetsExplorer",
+    "onCommand:rajaFolding.foldAll",
+    "onCommand:rajaFolding.unfoldAll",
+    "onCommand:rajaFolding.foldByClass",
+    "onCommand:rajaFolding.foldByFunction",
+    "onCommand:rajaFolding.foldLevel1",
+    "onCommand:rajaFolding.foldLevel2",
+    "onCommand:rajaFolding.foldLevel3",
+    "onCommand:rajaFolding.foldLevel4",
+    "onCommand:rajaFolding.foldLevel5",
+    "onCommand:rajaFolding.foldOthers",
+    "onCommand:rajaIcons.showGallery"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "package": "npx @vscode/vsce package",
+    "publish": "npx @vscode/vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.22",
+    "@types/vscode": "^1.60.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.28.0",
+    "@vscode/test-electron": "^2.2.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.4.3"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "rajaSnippets.addGroup",
+        "title": "Raja Snippets: Add Group"
+      },
+      {
+        "command": "rajaSnippets.addSnippet",
+        "title": "Raja Snippets: Add Snippet from Selection"
+      },
+      {
+        "command": "rajaSnippets.insertSnippet",
+        "title": "+ Sisipkan"
+      },
+      {
+        "command": "rajaSnippets.runSnippet",
+        "title": "Terminal >"
+      },
+      {
+        "command": "rajaSnippets.listSnippets",
+        "title": "Daftar"
+      },
+      {
+        "command": "rajaSnippets.exportSnippets",
+        "title": "Export Snippets"
+      },
+      {
+        "command": "rajaSnippets.importSnippets",
+        "title": "Import Snippets"
+      },
+      {
+        "command": "rajaSnippets.editOrDeleteSnippet",
+        "title": "Edit"
+      },
+      {
+        "command": "rajaSnippets.showSnippetActions",
+        "title": "Tampilkan Aksi Snippet"
+      },
+      {
+        "command": "rajaSnippets.deleteSnippet",
+        "title": "Hapus"
+      },
+      {
+        "command": "rajaSnippets.addSnippetToGroup",
+        "title": "Add Snippet to This Group",
+        "icon": "$(add)"
+      },
+      {
+        "command": "rajaSnippets.deleteGroupFromTree",
+        "title": "Delete Group",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "rajaSnippets.addGroupInline",
+        "title": "Add Group",
+        "icon": "$(folder-new)"
+      },
+      {
+        "command": "rajaSnippets.deleteGroup",
+        "title": "Raja Snippets: Delete Group"
+      },
+      {
+        "command": "rajaSnippets.exportJson",
+        "title": "Raja Snippets: Export to JSON"
+      },
+      {
+        "command": "rajaSnippets.importJson",
+        "title": "Raja Snippets: Import from JSON"
+      },
+      {
+        "command": "rajaSnippets.refresh",
+        "title": "Raja Snippets: Refresh"
+      },
+      {
+        "command": "rajaSnippets.changeSnippetType",
+        "title": "Ganti Tipe"
+      },
+      {
+        "command": "rajaSnippets.openStorage",
+        "title": "Buka Storage"
+      },
+      {
+        "command": "rajaSnippets.showStoragePath",
+        "title": "Tampilkan Lokasi Storage"
+      },
+      {
+        "command": "rajaSnippets.configureStorage",
+        "title": "Atur Lokasi Storage"
+      },
+      {
+        "command": "rajaSnippets.showAllSnippetActions",
+        "title": "Tampilkan Semua Aksi",
+        "icon": "$(ellipsis)"
+      },
+      {
+        "command": "rajaSnippets.showGroupActions",
+        "title": "Tampilkan Aksi Grup",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "rajaFolding.foldAll",
+        "title": "Fold All"
+      },
+      {
+        "command": "rajaFolding.unfoldAll",
+        "title": "Unfold All"
+      },
+      {
+        "command": "rajaFolding.foldByClass",
+        "title": "Fold by Class"
+      },
+      {
+        "command": "rajaFolding.foldByFunction",
+        "title": "Fold by Function"
+      },
+      {
+        "command": "rajaFolding.foldLevel1",
+        "title": "Fold Level 1"
+      },
+      {
+        "command": "rajaFolding.foldLevel2",
+        "title": "Fold Level 2"
+      },
+      {
+        "command": "rajaFolding.foldLevel3",
+        "title": "Fold Level 3"
+      },
+      {
+        "command": "rajaFolding.foldLevel4",
+        "title": "Fold Level 4"
+      },
+      {
+        "command": "rajaFolding.foldLevel5",
+        "title": "Fold Level 5"
+      },
+      {
+        "command": "rajaFolding.foldOthers",
+        "title": "Fold Others"
+      },
+      {
+        "command": "rajaIcons.showGallery",
+        "title": "Raja Icons: Show Phosphor Icons Gallery"
+      }
+    ],
+    "views": {
+      "rajaSnippets": [
+        {
+          "id": "rajaSnippetsExplorer",
+          "name": "Snippets",
+          "when": "workspaceFolderCount > 0",
+          "icon": "$(file-code)",
+          "contextualTitle": "Raja Snippets"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rajaSnippets",
+          "title": "Raja Snippets",
+          "icon": "$(file-code)"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "rajaSnippets.addGroupInline",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "inline",
+          "icon": "$(new-folder)"
+        },
+        {
+          "command": "rajaSnippets.configureStorage",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "inline",
+          "icon": "$(gear)"
+        },
+        {
+          "command": "rajaSnippets.exportSnippets",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "inline",
+          "icon": "$(export)"
+        },
+        {
+          "command": "rajaSnippets.importSnippets",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "inline",
+          "icon": "$(import)"
+        },
+        {
+          "command": "rajaSnippets.refresh",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "inline",
+          "icon": "$(refresh)"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "rajaSnippets.insertSnippet",
+          "when": "view == rajaSnippetsExplorer && viewItem =~ /snippet-.*$/",
+          "group": "1@1",
+          "icon": "$(insert)"
+        },
+        {
+          "command": "rajaSnippets.runSnippet",
+          "when": "view == rajaSnippetsExplorer && viewItem =~ /snippet-.*$/",
+          "group": "1@2",
+          "icon": "$(run)"
+        },
+        {
+          "command": "rajaSnippets.editOrDeleteSnippet",
+          "when": "view == rajaSnippetsExplorer && viewItem =~ /snippet-.*$/",
+          "group": "1@3",
+          "icon": "$(edit)"
+        },
+        {
+          "command": "rajaSnippets.changeSnippetType",
+          "when": "view == rajaSnippetsExplorer && viewItem =~ /snippet-.*$/",
+          "group": "2@1",
+          "icon": "$(symbol-enum)"
+        },
+        {
+          "command": "rajaSnippets.deleteSnippet",
+          "when": "view == rajaSnippetsExplorer && viewItem =~ /snippet-.*$/",
+          "group": "2@2",
+          "icon": "$(trash)"
+        },
+        {
+          "command": "rajaSnippets.addSnippetToGroup",
+          "when": "view == rajaSnippetsExplorer && viewItem == group",
+          "group": "inline@1",
+          "icon": "$(add)"
+        },
+        {
+          "command": "rajaSnippets.showGroupActions",
+          "when": "view == rajaSnippetsExplorer && viewItem == group",
+          "group": "1@2",
+          "icon": "$(gear)"
+        },
+        {
+          "command": "rajaSnippets.deleteGroupFromTree",
+          "when": "view == rajaSnippetsExplorer && viewItem == group",
+          "group": "1@3",
+          "icon": "$(trash)"
+        },
+        {
+          "command": "rajaSnippets.refresh",
+          "when": "view == rajaSnippetsExplorer",
+          "group": "navigation",
+          "icon": "$(refresh)"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "rajaSnippets.refresh",
+          "when": "false"
+        },
+        {
+          "command": "rajaSnippets.addSnippetToGroup",
+          "when": "false"
+        },
+        {
+          "command": "rajaSnippets.deleteGroupFromTree",
+          "when": "false"
+        },
+        {
+          "command": "rajaSnippets.addGroupInline",
+          "when": "false"
+        },
+        {
+          "command": "rajaSnippets.showAllSnippetActions",
+          "when": "false"
+        },
+        {
+          "command": "rajaSnippets.showGroupActions",
+          "when": "false"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "rajaFolding.submenu",
+          "group": "7_modification@1"
+        }
+      ],
+      "rajaFolding.submenu": [
+        {
+          "command": "rajaFolding.foldAll",
+          "group": "folding@1"
+        },
+        {
+          "command": "rajaFolding.unfoldAll",
+          "group": "folding@2"
+        },
+        {
+          "command": "rajaFolding.foldByClass",
+          "group": "folding@3"
+        },
+        {
+          "command": "rajaFolding.foldByFunction",
+          "group": "folding@4"
+        },
+        {
+          "command": "rajaFolding.foldLevel1",
+          "group": "folding@5"
+        },
+        {
+          "command": "rajaFolding.foldLevel2",
+          "group": "folding@6"
+        },
+        {
+          "command": "rajaFolding.foldLevel3",
+          "group": "folding@7"
+        },
+        {
+          "command": "rajaFolding.foldLevel4",
+          "group": "folding@8"
+        },
+        {
+          "command": "rajaFolding.foldLevel5",
+          "group": "folding@9"
+        },
+        {
+          "command": "rajaFolding.foldOthers",
+          "group": "folding@10"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "rajaFolding.submenu",
+        "label": "RAJA FOLDING"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Raja VsExtension",
+      "properties": {
+        "rajaSnippetsManager.storagePath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom folder path to store snippets.json. If empty, the extension uses the globalStorage folder."
+        }
+      }
+    }
+  }
+}
