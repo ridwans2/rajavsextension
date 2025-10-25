@@ -1,10 +1,9 @@
+import { PHOSPHOR_ICONS } from './phosphor-icons-list';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { SnippetManager, SnippetRecord } from './snippetManager';
 import { SnippetsTreeDataProvider } from './treeProvider';
-
-// TextEncoder and TextDecoder are built-in in modern Node.js
 declare global {
   interface TextEncoder {}
   interface TextDecoder {}
@@ -861,133 +860,110 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function loadPhosphorIcons(): Promise<{icons: string[], categories: {[key: string]: string[]}}> {
-  // Comprehensive list of Phosphor icons by category
-  const iconCategories = {
-    "Numbers & Math": [
-      "acorn", "approximate-equals", "bank", "calculator", "cardholder", "chart-bar", "chart-bar-horizontal",
-      "chart-donut", "chart-line", "chart-line-down", "chart-line-up", "chart-pie", "chart-pie-slice",
-      "chart-polar", "chart-scatter", "coin", "coin-vertical", "coins", "credit-card", "currency-btc",
-      "currency-circle-dollar", "currency-cny", "currency-dollar", "currency-dollar-simple", "currency-eth",
-      "currency-eur", "currency-gbp", "currency-inr", "currency-jpy", "currency-krw", "currency-kzt",
-      "currency-ngn", "currency-rub", "divide", "empty", "equals", "greater-than", "greater-than-or-equal",
-      "hand-arrow-down", "hand-arrow-up", "hand-coins", "hand-deposit", "hand-withdraw", "infinity",
-      "intersection", "invoice", "lectern", "less-than"
-    ],
-    "Commerce & Shopping": [
-      "shopping-cart-simple", "shovel", "shrimp", "sneaker", "sneaker-move", "sock", "solar-panel",
-      "solar-roof", "square-logo", "stairs", "steps", "stool", "storefront", "stripe-logo", "t-shirt",
-      "tag", "tag-chevron", "tag-simple", "tea-bag", "ticket", "tip-jar", "tire", "toolbox", "tote",
-      "tote-simple", "towel", "tractor", "trademark", "trademark-registered", "truck", "truck-trailer",
-      "wallet", "warehouse", "washing-machine", "windmill", "wine", "wrench", "yarn"
-    ],
-    "Communication": [
-      "chat", "chat-circle", "chat-circle-dots", "chat-dots", "chat-square", "chat-square-dots",
-      "chat-square-text", "chat-text", "envelope", "envelope-open", "envelope-simple", "envelope-simple-open",
-      "phone", "phone-call", "phone-disconnect", "phone-incoming", "phone-outgoing", "phone-slash",
-      "phone-x", "speaker-high", "speaker-low", "speaker-none", "speaker-simple-high", "speaker-simple-low",
-      "speaker-simple-none", "speaker-simple-slash", "speaker-simple-x", "speaker-slash", "speaker-x"
-    ],
-    "Media & Design": [
-      "camera", "camera-rotate", "camera-slash", "film-script", "film-slate", "film-strip", "image",
-      "image-square", "images", "images-square", "palette", "paint-brush", "paint-brush-broad",
-      "paint-bucket", "scissors", "eyedropper", "eyedropper-sample", "funnel", "funnel-simple",
-      "magnifying-glass", "magnifying-glass-minus", "magnifying-glass-plus", "selection", "selection-all",
-      "selection-background", "selection-foreground", "selection-inverse", "selection-plus", "selection-slash"
-    ],
-    "Navigation & Arrows": [
-      "arrow-arc-left", "arrow-arc-right", "arrow-bend-double-up-left", "arrow-bend-double-up-right",
-      "arrow-bend-down-left", "arrow-bend-down-right", "arrow-bend-left-down", "arrow-bend-left-up",
-      "arrow-bend-right-down", "arrow-bend-right-up", "arrow-bend-up-left", "arrow-bend-up-right",
-      "arrow-circle-down", "arrow-circle-down-left", "arrow-circle-down-right", "arrow-circle-left",
-      "arrow-circle-right", "arrow-circle-up", "arrow-circle-up-left", "arrow-circle-up-right",
-      "arrow-clockwise", "arrow-counter-clockwise", "arrow-down", "arrow-down-left", "arrow-down-right",
-      "arrow-elbow-down-left", "arrow-elbow-down-right", "arrow-elbow-left", "arrow-elbow-left-down",
-      "arrow-elbow-left-up", "arrow-elbow-right", "arrow-elbow-right-down", "arrow-elbow-right-up",
-      "arrow-elbow-up-left", "arrow-elbow-up-right", "arrow-fat-down", "arrow-fat-left", "arrow-fat-line-down",
-      "arrow-fat-line-left", "arrow-fat-line-right", "arrow-fat-line-up", "arrow-fat-lines-down",
-      "arrow-fat-lines-left", "arrow-fat-lines-right", "arrow-fat-lines-up", "arrow-fat-right", "arrow-fat-up",
-      "arrow-left", "arrow-line-down", "arrow-line-down-left", "arrow-line-down-right", "arrow-line-left",
-      "arrow-line-right", "arrow-line-up", "arrow-line-up-left", "arrow-line-up-right", "arrow-right",
-      "arrow-square-down", "arrow-square-down-left", "arrow-square-down-right", "arrow-square-in",
-      "arrow-square-left", "arrow-square-out", "arrow-square-right", "arrow-square-up", "arrow-square-up-left",
-      "arrow-square-up-right", "arrow-u-down-left", "arrow-u-down-right", "arrow-u-left-down", "arrow-u-left-up",
-      "arrow-u-right-down", "arrow-u-right-up", "arrow-u-up-left", "arrow-u-up-right", "arrow-up", "arrow-up-left",
-      "arrow-up-right", "arrows-clockwise", "arrows-counter-clockwise", "arrows-down-up", "arrows-in",
-      "arrows-in-cardinal", "arrows-in-line-horizontal", "arrows-in-line-vertical", "arrows-in-simple",
-      "arrows-left-right", "arrows-out", "arrows-out-cardinal", "arrows-out-line-horizontal",
-      "arrows-out-line-vertical", "arrows-out-simple", "caret-circle-double-down", "caret-circle-double-left",
-      "caret-circle-double-right", "caret-circle-double-up", "caret-circle-down", "caret-circle-left",
-      "caret-circle-right", "caret-circle-up", "caret-double-down", "caret-double-left", "caret-double-right",
-      "caret-double-up", "caret-down", "caret-left", "caret-right", "caret-up", "caret-up-down"
-    ],
-    "System & Interface": [
-      "activity", "address-book", "archive", "archive-box", "article", "article-medium", "article-ny-times",
-      "atom", "backspace", "battery-charging", "battery-charging-vertical", "battery-empty", "battery-full",
-      "battery-high", "battery-low", "battery-medium", "battery-plus", "battery-plus-vertical", "battery-warning",
-      "battery-warning-vertical", "bell", "bell-ringing", "bell-simple", "bell-simple-ringing", "bell-simple-slash",
-      "bell-slash", "bookmark", "bookmark-simple", "bookmarks", "bookmarks-simple", "briefcase", "briefcase-metal",
-      "browser", "browsers", "bug", "bug-beetle", "bug-droid", "calendar", "calendar-blank", "calendar-check",
-      "calendar-dot", "calendar-dots", "calendar-heart", "calendar-minus", "calendar-plus", "calendar-slash",
-      "calendar-star", "calendar-x", "cell-signal-full", "cell-signal-high", "cell-signal-low", "cell-signal-medium",
-      "cell-signal-none", "cell-signal-slash", "cell-signal-x", "clock", "clock-afternoon", "clock-clockwise",
-      "clock-counter-clockwise", "cloud", "cloud-arrow-down", "cloud-arrow-up", "cloud-check", "cloud-lightning",
-      "cloud-moon", "cloud-rain", "cloud-slash", "cloud-snow", "cloud-sun", "computer-tower", "cpu", "database",
-      "desktop", "desktop-tower", "device-mobile", "device-mobile-camera", "device-mobile-slash", "device-mobile-speaker",
-      "device-tablet", "device-tablet-camera", "device-tablet-speaker", "devices", "dot", "dots-nine", "dots-six",
-      "dots-six-vertical", "dots-three", "dots-three-circle", "dots-three-circle-vertical", "dots-three-outline",
-      "dots-three-outline-vertical", "dots-three-vertical", "download", "download-simple", "eject", "eject-simple",
-      "fast-forward", "fast-forward-circle", "file", "file-archive", "file-arrow-down", "file-arrow-up", "file-audio",
-      "file-cloud", "file-code", "file-css", "file-csv", "file-doc", "file-dotted", "file-html", "file-image",
-      "file-ini", "file-jpg", "file-js", "file-jsx", "file-lock", "file-magnifying-glass", "file-minus", "file-pdf",
-      "file-plus", "file-png", "file-ppt", "file-rs", "file-search", "file-text", "file-ts", "file-tsx", "file-txt",
-      "file-video", "file-x", "file-xls", "file-zip", "files", "fingerprint", "fingerprint-simple", "floppy-disk",
-      "floppy-disk-back", "folder", "folder-dotted", "folder-lock", "folder-minus", "folder-open", "folder-plus",
-      "folder-simple", "folder-simple-dotted", "folder-simple-lock", "folder-simple-minus", "folder-simple-open",
-      "folder-simple-plus", "folder-simple-star", "folder-simple-user", "folder-star", "folder-user", "folders",
-      "game-controller", "gauge", "gear", "gear-six", "hard-drive", "hard-drives", "hdmi-logo", "headphones",
-      "headset", "hourglass", "hourglass-high", "hourglass-low", "hourglass-medium", "hourglass-simple",
-      "hourglass-simple-high", "hourglass-simple-low", "hourglass-simple-medium", "keyboard", "laptop", "lightbulb",
-      "lightbulb-filament", "lightning", "lightning-slash", "list", "list-bullets", "list-checks", "list-dashes",
-      "list-numbers", "list-plus", "lock", "lock-key", "lock-key-open", "lock-laminated", "lock-laminated-open",
-      "lock-open", "lock-simple", "lock-simple-open", "magnifying-glass", "magnifying-glass-minus", "magnifying-glass-plus",
-      "memory", "microphone", "microphone-slash", "microphone-stage", "minus", "minus-circle", "minus-square",
-      "monitor", "monitor-play", "moon", "moon-stars", "mouse", "mouse-simple", "navigation-arrow", "newspaper",
-      "newspaper-clipping", "notepad", "note", "note-blank", "note-pencil", "notebook", "notification", "package",
-      "paper-plane", "paper-plane-right", "paper-plane-tilt", "paperclip", "paperclip-horizontal", "pause", "pause-circle",
-      "paw-print", "pen", "pen-nib", "pen-nib-straight", "pencil", "pencil-circle", "pencil-line", "pencil-simple",
-      "pencil-simple-line", "percent", "phone", "phone-call", "phone-disconnect", "phone-incoming", "phone-outgoing",
-      "phone-slash", "phone-x", "play", "play-circle", "plus", "plus-circle", "plus-minus", "plus-square", "power",
-      "printer", "projector-screen", "projector-screen-chart", "push-pin", "push-pin-slash", "qr-code", "queue",
-      "radio", "radio-button", "record", "repeat", "repeat-once", "rewind", "rewind-circle", "robot", "rss", "rss-simple",
-      "scissors", "scooter", "screencast", "share", "share-network", "shield", "shield-check", "shield-slash", "shield-warning",
-      "shuffle", "shuffle-angular", "shuffle-simple", "sidebar", "sidebar-simple", "sign-in", "sign-out", "sim-card",
-      "skip-back", "skip-back-circle", "skip-forward", "skip-forward-circle", "sliders", "sliders-horizontal", "sort-ascending",
-      "sort-descending", "speaker-high", "speaker-low", "speaker-none", "speaker-simple-high", "speaker-simple-low",
-      "speaker-simple-none", "speaker-simple-slash", "speaker-simple-x", "speaker-slash", "speaker-x", "spinner", "spinner-gap",
-      "square", "square-half", "square-half-bottom", "square-split-horizontal", "square-split-vertical", "squares-four",
-      "stack", "stack-minus", "stack-overflow-logo", "stack-plus", "stack-simple", "star", "star-half", "stop", "stop-circle",
-      "storefront", "sun", "sun-dim", "sun-horizon", "table", "tablet", "tag", "tag-chevron", "tag-simple", "target", "terminal",
-      "terminal-window", "text-aa", "text-align-center", "text-align-justify", "text-align-left", "text-align-right",
-      "text-bolder", "text-h-five", "text-h-four", "text-h-one", "text-h-six", "text-h-three", "text-h-two", "text-indent",
-      "text-italic", "text-outdent", "text-strikethrough", "text-t", "text-underline", "thermometer", "thermometer-cold",
-      "thermometer-hot", "thermometer-simple", "timer", "toggle-left", "toggle-right", "trash", "trash-simple", "tray",
-      "tray-arrow-down", "tray-arrow-up", "tree", "tree-evergreen", "tree-palm", "tree-structure", "trend-down", "trend-up",
-      "triangle", "trophy", "umbrella", "umbrella-simple", "upload", "upload-simple", "usb", "user", "user-check", "user-circle",
-      "user-circle-check", "user-circle-gear", "user-circle-minus", "user-circle-plus", "user-focus", "user-gear", "user-list",
-      "user-minus", "user-plus", "user-rectangle", "user-square", "user-switch", "users", "users-four", "users-three",
-      "vibrate", "video", "video-camera", "video-camera-slash", "voicemail", "wall", "wallet", "warning", "warning-circle",
-      "warning-diamond", "warning-octagon", "watch", "webcam", "webcam-slash", "wifi-high", "wifi-low", "wifi-medium",
-      "wifi-none", "wifi-slash", "wifi-x", "windows-logo", "wrench", "x", "x-circle", "x-square", "yin-yang", "zap"
-    ]
+  // Use the complete Phosphor Icons list
+  const allIcons = PHOSPHOR_ICONS;
+
+  // Create categories based on common prefixes/themes
+  const categories: {[key: string]: string[]} = {
+    "Animals & Nature": allIcons.filter(icon =>
+      icon.includes('bird') || icon.includes('fish') || icon.includes('dog') || icon.includes('cat') ||
+      icon.includes('tree') || icon.includes('leaf') || icon.includes('flower') || icon.includes('sun') ||
+      icon.includes('moon') || icon.includes('star') || icon.includes('cloud') || icon.includes('rain') ||
+      icon.includes('snow') || icon.includes('wind') || icon.includes('fire') || icon.includes('water')
+    ),
+    "Arrows & Navigation": allIcons.filter(icon =>
+      icon.includes('arrow') || icon.includes('chevron') || icon.includes('caret') || icon.includes('angle') ||
+      icon.includes('corner') || icon.includes('move') || icon.includes('direction')
+    ),
+    "Communication": allIcons.filter(icon =>
+      icon.includes('chat') || icon.includes('message') || icon.includes('mail') || icon.includes('email') ||
+      icon.includes('phone') || icon.includes('call') || icon.includes('video') || icon.includes('microphone') ||
+      icon.includes('speaker') || icon.includes('volume') || icon.includes('notification') || icon.includes('bell')
+    ),
+    "Design & Tools": allIcons.filter(icon =>
+      icon.includes('paint') || icon.includes('brush') || icon.includes('palette') || icon.includes('color') ||
+      icon.includes('scissors') || icon.includes('crop') || icon.includes('resize') || icon.includes('zoom') ||
+      icon.includes('magnifying') || icon.includes('search') || icon.includes('filter') || icon.includes('eye') ||
+      icon.includes('cursor') || icon.includes('pointer') || icon.includes('hand') || icon.includes('fingerprint')
+    ),
+    "Devices & Hardware": allIcons.filter(icon =>
+      icon.includes('computer') || icon.includes('laptop') || icon.includes('tablet') || icon.includes('phone') ||
+      icon.includes('mobile') || icon.includes('monitor') || icon.includes('keyboard') || icon.includes('mouse') ||
+      icon.includes('printer') || icon.includes('camera') || icon.includes('headphone') || icon.includes('battery') ||
+      icon.includes('wifi') || icon.includes('bluetooth') || icon.includes('usb') || icon.includes('chip') ||
+      icon.includes('cpu') || icon.includes('memory') || icon.includes('hard-drive') || icon.includes('server')
+    ),
+    "Files & Folders": allIcons.filter(icon =>
+      icon.includes('file') || icon.includes('folder') || icon.includes('document') || icon.includes('paper') ||
+      icon.includes('archive') || icon.includes('zip') || icon.includes('download') || icon.includes('upload') ||
+      icon.includes('share') || icon.includes('link') || icon.includes('attachment') || icon.includes('clipboard')
+    ),
+    "Interface & UI": allIcons.filter(icon =>
+      icon.includes('menu') || icon.includes('list') || icon.includes('grid') || icon.includes('layout') ||
+      icon.includes('sidebar') || icon.includes('window') || icon.includes('browser') || icon.includes('tab') ||
+      icon.includes('button') || icon.includes('switch') || icon.includes('toggle') || icon.includes('slider') ||
+      icon.includes('progress') || icon.includes('loading') || icon.includes('spinner') || icon.includes('check') ||
+      icon.includes('close') || icon.includes('plus') || icon.includes('minus') || icon.includes('settings') ||
+      icon.includes('gear') || icon.includes('cog') || icon.includes('wrench') || icon.includes('tool')
+    ),
+    "Math & Finance": allIcons.filter(icon =>
+      icon.includes('calculator') || icon.includes('math') || icon.includes('plus') || icon.includes('minus') ||
+      icon.includes('multiply') || icon.includes('divide') || icon.includes('equals') || icon.includes('percent') ||
+      icon.includes('currency') || icon.includes('dollar') || icon.includes('euro') || icon.includes('bitcoin') ||
+      icon.includes('money') || icon.includes('bank') || icon.includes('credit') || icon.includes('wallet') ||
+      icon.includes('shopping') || icon.includes('cart') || icon.includes('bag') || icon.includes('store')
+    ),
+    "Media & Entertainment": allIcons.filter(icon =>
+      icon.includes('play') || icon.includes('pause') || icon.includes('stop') || icon.includes('skip') ||
+      icon.includes('rewind') || icon.includes('fast') || icon.includes('forward') || icon.includes('repeat') ||
+      icon.includes('shuffle') || icon.includes('music') || icon.includes('audio') || icon.includes('video') ||
+      icon.includes('film') || icon.includes('camera') || icon.includes('image') || icon.includes('photo') ||
+      icon.includes('picture') || icon.includes('gallery') || icon.includes('youtube') || icon.includes('spotify')
+    ),
+    "Security & Safety": allIcons.filter(icon =>
+      icon.includes('lock') || icon.includes('unlock') || icon.includes('key') || icon.includes('shield') ||
+      icon.includes('security') || icon.includes('safe') || icon.includes('warning') || icon.includes('alert') ||
+      icon.includes('error') || icon.includes('danger') || icon.includes('caution') || icon.includes('info') ||
+      icon.includes('help') || icon.includes('question') || icon.includes('exclamation')
+    ),
+    "Social & People": allIcons.filter(icon =>
+      icon.includes('user') || icon.includes('person') || icon.includes('people') || icon.includes('group') ||
+      icon.includes('team') || icon.includes('friend') || icon.includes('profile') || icon.includes('avatar') ||
+      icon.includes('face') || icon.includes('smile') || icon.includes('heart') || icon.includes('like') ||
+      icon.includes('star') || icon.includes('favorite') || icon.includes('bookmark') || icon.includes('flag')
+    ),
+    "Time & Calendar": allIcons.filter(icon =>
+      icon.includes('clock') || icon.includes('time') || icon.includes('hour') || icon.includes('minute') ||
+      icon.includes('second') || icon.includes('watch') || icon.includes('timer') || icon.includes('alarm') ||
+      icon.includes('calendar') || icon.includes('date') || icon.includes('schedule') || icon.includes('event') ||
+      icon.includes('birthday') || icon.includes('holiday')
+    ),
+    "Transportation": allIcons.filter(icon =>
+      icon.includes('car') || icon.includes('truck') || icon.includes('bus') || icon.includes('train') ||
+      icon.includes('plane') || icon.includes('ship') || icon.includes('boat') || icon.includes('bicycle') ||
+      icon.includes('motorcycle') || icon.includes('taxi') || icon.includes('parking') || icon.includes('gas') ||
+      icon.includes('fuel') || icon.includes('road') || icon.includes('map') || icon.includes('location') ||
+      icon.includes('navigation') || icon.includes('compass') || icon.includes('gps')
+    ),
+    "Weather & Environment": allIcons.filter(icon =>
+      icon.includes('weather') || icon.includes('temperature') || icon.includes('thermometer') || icon.includes('sun') ||
+      icon.includes('moon') || icon.includes('cloud') || icon.includes('rain') || icon.includes('snow') ||
+      icon.includes('wind') || icon.includes('storm') || icon.includes('lightning') || icon.includes('umbrella') ||
+      icon.includes('sunrise') || icon.includes('sunset') || icon.includes('day') || icon.includes('night') ||
+      icon.includes('earth') || icon.includes('globe') || icon.includes('world') || icon.includes('nature') ||
+      icon.includes('mountain') || icon.includes('river') || icon.includes('ocean') || icon.includes('forest')
+    )
   };
 
-  // Flatten all icons
-  const allIcons: string[] = [];
-  for (const category in iconCategories) {
-    allIcons.push(...(iconCategories as any)[category]);
+  // Add uncategorized icons to "Other" category
+  const categorizedIcons = new Set<string>();
+  for (const category in categories) {
+    categories[category].forEach(icon => categorizedIcons.add(icon));
   }
 
-  return { icons: allIcons, categories: iconCategories };
+  categories["Other"] = allIcons.filter(icon => !categorizedIcons.has(icon));
+
+  return { icons: allIcons, categories };
 }
 
 function showIconsGallery(iconData: {icons: string[], categories: {[key: string]: string[]}}) {
@@ -1023,6 +999,8 @@ function generateGalleryHTML(iconData: {icons: string[], categories: {[key: stri
       <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
       <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/duotone/style.css">
       <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/light/style.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/thin/style.css">
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -1156,6 +1134,8 @@ function generateGalleryHTML(iconData: {icons: string[], categories: {[key: stri
             <option value="bold">Bold</option>
             <option value="duotone">Duotone</option>
             <option value="fill">Fill</option>
+            <option value="light">Light</option>
+            <option value="thin">Thin</option>
           </select>
         </div>
       </div>
@@ -1174,9 +1154,17 @@ function generateGalleryHTML(iconData: {icons: string[], categories: {[key: stri
           const select = document.getElementById('weight-select');
           currentWeight = select.value;
           const icons = document.querySelectorAll('.icon i');
-          icons.forEach(icon => {
-            const iconName = icon.className.split(' ').find(cls => cls.startsWith('ph-')).replace('ph-', '');
-            icon.className = \`ph-\${currentWeight} ph-\${iconName}\`;
+          const iconNames = document.querySelectorAll('.icon-name');
+
+          icons.forEach((icon, index) => {
+            const baseName = icon.className.split(' ').pop().replace('ph-', '').replace(/-(regular|bold|duotone|fill|light|thin)$/, '');
+            if (currentWeight === 'regular') {
+              icon.className = 'ph ph-' + baseName;
+              iconNames[index].textContent = 'ph ph-' + baseName;
+            } else {
+              icon.className = 'ph-' + currentWeight + ' ph-' + baseName;
+              iconNames[index].textContent = 'ph ph-' + baseName + '-' + currentWeight;
+            }
           });
           filterIcons();
         }
@@ -1205,12 +1193,38 @@ function generateGalleryHTML(iconData: {icons: string[], categories: {[key: stri
             }
           });
 
-          document.querySelector('.stats').textContent = \`Showing \${visibleCount} of \${items.length} icons\`;
+          document.querySelector('.stats').textContent = 'Showing ' + visibleCount + ' of ' + items.length + ' icons';
         }
 
         function copyIcon(iconName) {
           navigator.clipboard.writeText(iconName).then(() => {
+            // Show notification
+            const notification = document.createElement('div');
+            notification.textContent = '✓ Icon berhasil disalin: ' + iconName;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 12px 16px; border-radius: 4px; font-size: 14px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); animation: fadeInOut 3s ease-in-out;';
+
+            // Add fade animation
+            const style = document.createElement('style');
+            style.textContent = '@keyframes fadeInOut { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }';
+            document.head.appendChild(style);
+            document.body.appendChild(notification);
+
+            // Remove notification after animation
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 3000);
+
             console.log('Copied:', iconName);
+          }).catch(err => {
+            console.error('Failed to copy:', err);
+            // Show error notification
+            const notification = document.createElement('div');
+            notification.textContent = '❌ Gagal menyalin icon';
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #f44336; color: white; padding: 12px 16px; border-radius: 4px; font-size: 14px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.3);';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 3000);
           });
         }
       </script>
