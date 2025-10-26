@@ -46,7 +46,11 @@
     "onCommand:rajaFolding.foldLevel4",
     "onCommand:rajaFolding.foldLevel5",
     "onCommand:rajaFolding.foldOthers",
-    "onCommand:rajaIcons.showGallery"
+    "onView:rajaIconsTree",
+    "onCommand:rajaIcons.showGallery",
+    "onCommand:rajaIcons.copyIcon",
+    "onCommand:rajaIcons.searchIcons",
+    "onCommand:rajaIcons.clearSearch"
   ],
   "main": "./out/extension.js",
   "scripts": {
@@ -214,6 +218,18 @@
       {
         "command": "rajaIcons.showGallery",
         "title": "Raja Icons: Show Phosphor Icons Gallery"
+      },
+      {
+        "command": "rajaIcons.copyIcon",
+        "title": "Copy Icon"
+      },
+      {
+        "command": "rajaIcons.searchIcons",
+        "title": "Search Icons"
+      },
+      {
+        "command": "rajaIcons.clearSearch",
+        "title": "Clear Search"
       }
     ],
     "views": {
@@ -225,6 +241,14 @@
           "icon": "$(file-code)",
           "contextualTitle": "Raja Snippets"
         }
+      ],
+      "rajaIcons": [
+        {
+          "id": "rajaIconsTree",
+          "name": "Raja Icons Tree",
+          "icon": "$(symbol-class)",
+          "contextualTitle": "Raja Icons"
+        }
       ]
     },
     "viewsContainers": {
@@ -233,6 +257,11 @@
           "id": "rajaSnippets",
           "title": "Raja Snippets",
           "icon": "$(file-code)"
+        },
+        {
+          "id": "rajaIcons",
+          "title": "Raja Icons",
+          "icon": "$(symbol-class)"
         }
       ]
     },
@@ -267,6 +296,12 @@
           "when": "view == rajaSnippetsExplorer",
           "group": "inline",
           "icon": "$(refresh)"
+        },
+        {
+          "command": "rajaIcons.searchIcons",
+          "when": "view == rajaIconsTree",
+          "group": "inline",
+          "icon": "$(search)"
         }
       ],
       "view/item/context": [
@@ -319,36 +354,10 @@
           "icon": "$(trash)"
         },
         {
-          "command": "rajaSnippets.refresh",
-          "when": "view == rajaSnippetsExplorer",
-          "group": "navigation",
-          "icon": "$(refresh)"
-        }
-      ],
-      "commandPalette": [
-        {
-          "command": "rajaSnippets.refresh",
-          "when": "false"
-        },
-        {
-          "command": "rajaSnippets.addSnippetToGroup",
-          "when": "false"
-        },
-        {
-          "command": "rajaSnippets.deleteGroupFromTree",
-          "when": "false"
-        },
-        {
-          "command": "rajaSnippets.addGroupInline",
-          "when": "false"
-        },
-        {
-          "command": "rajaSnippets.showAllSnippetActions",
-          "when": "false"
-        },
-        {
-          "command": "rajaSnippets.showGroupActions",
-          "when": "false"
+          "command": "rajaIcons.copyIcon",
+          "when": "view == rajaIconsTree && viewItem == icon",
+          "group": "7_modification@1",
+          "icon": "$(copy)"
         }
       ],
       "editor/context": [

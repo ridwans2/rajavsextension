@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { SnippetManager, SnippetRecord } from './snippetManager';
 import { SnippetsTreeDataProvider } from './treeProvider';
+import { IconsTreeDataProvider } from './phosphorIconsTree';
 declare global {
   interface TextEncoder {}
   interface TextDecoder {}
@@ -857,6 +858,58 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(showGallery);
+
+  // Raja Icons Tree View
+  const iconsTreeDataProvider = new IconsTreeDataProvider();
+  const iconsTreeView = vscode.window.createTreeView('rajaIconsTree', {
+    treeDataProvider: iconsTreeDataProvider,
+    showCollapseAll: true
+  });
+  context.subscriptions.push(iconsTreeView);
+
+  // Command untuk copy icon (notifikasi singkat 0.5 detik)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rajaIcons.copyIcon', async (iconName: string) => {
+      if (iconName) {
+        await vscode.env.clipboard.writeText(`phosphor-${iconName}`);
+
+        // Show temporary status bar notification for 0.5 seconds
+        const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+        statusBarItem.text = `✓ Icon berhasil disalin: phosphor-${iconName}`;
+        statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
+        statusBarItem.color = new vscode.ThemeColor('statusBarItem.prominentForeground');
+        statusBarItem.show();
+
+        // Hide after 0.5 seconds
+        setTimeout(() => {
+          statusBarItem.dispose();
+        }, 500);
+      }
+    })
+  );
+
+  // Command untuk search icons
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rajaIcons.searchIcons', async () => {
+      const searchTerm = await vscode.window.showInputBox({
+        prompt: 'Cari icon Phosphor',
+        placeHolder: 'Masukkan nama icon, contoh: %heart% atau %arrow%',
+        value: '%'
+      });
+      if (searchTerm !== undefined) {
+        // Remove % characters and trim
+        const cleanTerm = searchTerm.replace(/%/g, '').trim();
+        iconsTreeDataProvider.refresh(cleanTerm);
+      }
+    })
+  );
+
+  // Command untuk clear search
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rajaIcons.clearSearch', () => {
+      iconsTreeDataProvider.refresh('');
+    })
+  );
 }
 
 async function loadPhosphorIcons(): Promise<{icons: string[], categories: {[key: string]: string[]}}> {

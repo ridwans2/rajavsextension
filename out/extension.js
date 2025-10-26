@@ -6,6 +6,7 @@ const vscode = require("vscode");
 const fs = require("fs");
 const snippetManager_1 = require("./snippetManager");
 const treeProvider_1 = require("./treeProvider");
+const phosphorIconsTree_1 = require("./phosphorIconsTree");
 /**
  * Resolve dynamic placeholders like {$variable} in snippet content
  * Prompts user for each placeholder and replaces them.
@@ -800,6 +801,46 @@ function activate(context) {
         showIconsGallery(iconData);
     });
     context.subscriptions.push(showGallery);
+    // Raja Icons Tree View
+    const iconsTreeDataProvider = new phosphorIconsTree_1.IconsTreeDataProvider();
+    const iconsTreeView = vscode.window.createTreeView('rajaIconsTree', {
+        treeDataProvider: iconsTreeDataProvider,
+        showCollapseAll: true
+    });
+    context.subscriptions.push(iconsTreeView);
+    // Command untuk copy icon (notifikasi singkat 0.5 detik)
+    context.subscriptions.push(vscode.commands.registerCommand('rajaIcons.copyIcon', async (iconName) => {
+        if (iconName) {
+            await vscode.env.clipboard.writeText(`phosphor-${iconName}`);
+            // Show temporary status bar notification for 0.5 seconds
+            const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+            statusBarItem.text = `✓ Icon berhasil disalin: phosphor-${iconName}`;
+            statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
+            statusBarItem.color = new vscode.ThemeColor('statusBarItem.prominentForeground');
+            statusBarItem.show();
+            // Hide after 0.5 seconds
+            setTimeout(() => {
+                statusBarItem.dispose();
+            }, 500);
+        }
+    }));
+    // Command untuk search icons
+    context.subscriptions.push(vscode.commands.registerCommand('rajaIcons.searchIcons', async () => {
+        const searchTerm = await vscode.window.showInputBox({
+            prompt: 'Cari icon Phosphor',
+            placeHolder: 'Masukkan nama icon, contoh: %heart% atau %arrow%',
+            value: '%'
+        });
+        if (searchTerm !== undefined) {
+            // Remove % characters and trim
+            const cleanTerm = searchTerm.replace(/%/g, '').trim();
+            iconsTreeDataProvider.refresh(cleanTerm);
+        }
+    }));
+    // Command untuk clear search
+    context.subscriptions.push(vscode.commands.registerCommand('rajaIcons.clearSearch', () => {
+        iconsTreeDataProvider.refresh('');
+    }));
 }
 exports.activate = activate;
 async function loadPhosphorIcons() {
