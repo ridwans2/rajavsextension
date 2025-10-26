@@ -7,9 +7,15 @@ export class IconsTreeDataProvider implements vscode.TreeDataProvider<IconTreeIt
 
   private iconCategories: {[key: string]: string[]} = {};
   private searchFilter: string = '';
+  private currentWeight: IconWeight = 'regular';
 
   constructor() {
     this.loadIconCategories();
+  }
+
+  setWeight(weight: IconWeight) {
+    this.currentWeight = weight;
+    this.refresh(this.searchFilter);
   }
 
   private loadIconCategories() {
@@ -168,13 +174,18 @@ export class IconsTreeDataProvider implements vscode.TreeDataProvider<IconTreeIt
         icons.filter(icon => icon.toLowerCase().includes(this.searchFilter.toLowerCase())) :
         icons;
 
-      return Promise.resolve(filteredIcons.map(icon => new IconTreeItem(
-        `phosphor-${icon}`,
-        `Click to copy: phosphor-${icon}`,
-        vscode.TreeItemCollapsibleState.None,
-        'icon',
-        icon
-      )));
+      return Promise.resolve(filteredIcons.map(icon => {
+        const identifier = getIconIdentifier(icon, this.currentWeight);
+        return new IconTreeItem(
+          identifier,
+          `Click to copy: ${identifier}`,
+          vscode.TreeItemCollapsibleState.None,
+          'icon',
+          icon,
+          undefined,
+          this.currentWeight
+        );
+    }));
     }
 
     return Promise.resolve([]);
@@ -188,7 +199,8 @@ export class IconTreeItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly type: 'category' | 'icon',
     public readonly iconName?: string,
-    public readonly iconThemeName?: string
+    public readonly iconThemeName?: string,
+    public readonly weight: IconWeight = 'regular'
   ) {
     super(label, collapsibleState);
     this.tooltip = tooltip;
@@ -298,8 +310,14 @@ export class IconTreeItem extends vscode.TreeItem {
       this.command = {
         command: 'rajaIcons.copyIcon',
         title: 'Copy Icon',
-        arguments: [iconName]
+        arguments: [iconName, this.weight]
       };
     }
   }
+}
+
+export type IconWeight = 'regular' | 'bold' | 'duotone' | 'fill' | 'light' | 'thin';
+
+export function getIconIdentifier(name: string, weight: IconWeight): string {
+  return weight === 'regular' ? `phosphor-${name}` : `phosphor-${name}-${weight}`;
 }

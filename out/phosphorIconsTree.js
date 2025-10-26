@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IconTreeItem = exports.IconsTreeDataProvider = void 0;
+exports.getIconIdentifier = exports.IconTreeItem = exports.IconsTreeDataProvider = void 0;
 const phosphor_icons_list_1 = require("./phosphor-icons-list");
 const vscode = require("vscode");
 class IconsTreeDataProvider {
@@ -9,7 +9,12 @@ class IconsTreeDataProvider {
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
         this.iconCategories = {};
         this.searchFilter = '';
+        this.currentWeight = 'regular';
         this.loadIconCategories();
+    }
+    setWeight(weight) {
+        this.currentWeight = weight;
+        this.refresh(this.searchFilter);
     }
     loadIconCategories() {
         const allIcons = phosphor_icons_list_1.PHOSPHOR_ICONS;
@@ -123,14 +128,17 @@ class IconsTreeDataProvider {
             const filteredIcons = this.searchFilter ?
                 icons.filter(icon => icon.toLowerCase().includes(this.searchFilter.toLowerCase())) :
                 icons;
-            return Promise.resolve(filteredIcons.map(icon => new IconTreeItem(`phosphor-${icon}`, `Click to copy: phosphor-${icon}`, vscode.TreeItemCollapsibleState.None, 'icon', icon)));
+            return Promise.resolve(filteredIcons.map(icon => {
+                const identifier = getIconIdentifier(icon, this.currentWeight);
+                return new IconTreeItem(identifier, `Click to copy: ${identifier}`, vscode.TreeItemCollapsibleState.None, 'icon', icon, undefined, this.currentWeight);
+            }));
         }
         return Promise.resolve([]);
     }
 }
 exports.IconsTreeDataProvider = IconsTreeDataProvider;
 class IconTreeItem extends vscode.TreeItem {
-    constructor(label, tooltip, collapsibleState, type, iconName, iconThemeName) {
+    constructor(label, tooltip, collapsibleState, type, iconName, iconThemeName, weight = 'regular') {
         super(label, collapsibleState);
         this.label = label;
         this.tooltip = tooltip;
@@ -138,6 +146,7 @@ class IconTreeItem extends vscode.TreeItem {
         this.type = type;
         this.iconName = iconName;
         this.iconThemeName = iconThemeName;
+        this.weight = weight;
         this.tooltip = tooltip;
         this.type = type;
         this.iconName = iconName;
@@ -326,10 +335,14 @@ class IconTreeItem extends vscode.TreeItem {
             this.command = {
                 command: 'rajaIcons.copyIcon',
                 title: 'Copy Icon',
-                arguments: [iconName]
+                arguments: [iconName, this.weight]
             };
         }
     }
 }
 exports.IconTreeItem = IconTreeItem;
+function getIconIdentifier(name, weight) {
+    return weight === 'regular' ? `phosphor-${name}` : `phosphor-${name}-${weight}`;
+}
+exports.getIconIdentifier = getIconIdentifier;
 //# sourceMappingURL=phosphorIconsTree.js.map

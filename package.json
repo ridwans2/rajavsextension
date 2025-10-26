@@ -217,7 +217,8 @@
       },
       {
         "command": "rajaIcons.showGallery",
-        "title": "Raja Icons: Show Phosphor Icons Gallery"
+        "title": "Buka Galeri Ikon",
+        "category": "Raja Icons"
       },
       {
         "command": "rajaIcons.copyIcon",
@@ -296,6 +297,12 @@
           "when": "view == rajaSnippetsExplorer",
           "group": "inline",
           "icon": "$(refresh)"
+        },
+        {
+          "command": "rajaIcons.showGallery",
+          "when": "view == rajaIconsTree",
+          "group": "navigation@1",
+          "icon": "$(eye)"
         },
         {
           "command": "rajaIcons.searchIcons",
