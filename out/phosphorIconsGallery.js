@@ -89,7 +89,7 @@ function generateGalleryHTML(iconData) {
       <div class="icon">
         <i class="ph ph-${icon}" data-base="${icon}"></i>
       </div>
-      <div class="icon-name" data-base="${icon}">phosphor-${icon}</div>
+      <div class="icon-name" data-base="${icon}">${icon}</div>
     </div>
   `).join('');
     return `
@@ -179,13 +179,13 @@ function generateGalleryHTML(iconData) {
         .gallery {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-          gap: 20px;
+          gap: 10px;
         }
         .icon-item {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 15px;
+          padding: 10px;
           border: 1px solid var(--vscode-panel-border);
           border-radius: 8px;
           background: var(--vscode-panel-background);
@@ -197,7 +197,7 @@ function generateGalleryHTML(iconData) {
           border-color: var(--vscode-focusBorder);
         }
         .icon {
-          font-size: 32px;
+          font-size: 35px;
           margin-bottom: 8px;
           color: var(--vscode-foreground);
         }
@@ -212,6 +212,127 @@ function generateGalleryHTML(iconData) {
           margin-bottom: 20px;
           font-size: 14px;
           color: var(--vscode-descriptionForeground);
+        }
+
+        /* Category color accents */
+        .icon-item[data-category="Animals & Nature"] {
+          border-color: #4caf50;
+          background: rgba(76, 175, 80, 0.08);
+        }
+        .icon-item[data-category="Animals & Nature"] .icon {
+          color: #4caf50;
+        }
+
+        .icon-item[data-category="Arrows & Navigation"] {
+          border-color: #ff9800;
+          background: rgba(255, 152, 0, 0.08);
+        }
+        .icon-item[data-category="Arrows & Navigation"] .icon {
+          color: #ff9800;
+        }
+
+        .icon-item[data-category="Communication"] {
+          border-color: #03a9f4;
+          background: rgba(3, 169, 244, 0.08);
+        }
+        .icon-item[data-category="Communication"] .icon {
+          color: #03a9f4;
+        }
+
+        .icon-item[data-category="Design & Tools"] {
+          border-color: #9c27b0;
+          background: rgba(156, 39, 176, 0.08);
+        }
+        .icon-item[data-category="Design & Tools"] .icon {
+          color: #9c27b0;
+        }
+
+        .icon-item[data-category="Devices & Hardware"] {
+          border-color: #607d8b;
+          background: rgba(96, 125, 139, 0.12);
+        }
+        .icon-item[data-category="Devices & Hardware"] .icon {
+          color: #607d8b;
+        }
+
+        .icon-item[data-category="Files & Folders"] {
+          border-color: #795548;
+          background: rgba(121, 85, 72, 0.1);
+        }
+        .icon-item[data-category="Files & Folders"] .icon {
+          color: #795548;
+        }
+
+        .icon-item[data-category="Interface & UI"] {
+          border-color: #3f51b5;
+          background: rgba(63, 81, 181, 0.08);
+        }
+        .icon-item[data-category="Interface & UI"] .icon {
+          color: #3f51b5;
+        }
+
+        .icon-item[data-category="Math & Finance"] {
+          border-color: #ff5722;
+          background: rgba(255, 87, 34, 0.08);
+        }
+        .icon-item[data-category="Math & Finance"] .icon {
+          color: #ff5722;
+        }
+
+        .icon-item[data-category="Media & Entertainment"] {
+          border-color: #e91e63;
+          background: rgba(233, 30, 99, 0.08);
+        }
+        .icon-item[data-category="Media & Entertainment"] .icon {
+          color: #e91e63;
+        }
+
+        .icon-item[data-category="Security & Safety"] {
+          border-color: #f44336;
+          background: rgba(244, 67, 54, 0.08);
+        }
+        .icon-item[data-category="Security & Safety"] .icon {
+          color: #f44336;
+        }
+
+        .icon-item[data-category="Social & People"] {
+          border-color: #ffb300;
+          background: rgba(255, 179, 0, 0.1);
+        }
+        .icon-item[data-category="Social & People"] .icon {
+          color: #ffb300;
+        }
+
+        .icon-item[data-category="Time & Calendar"] {
+          border-color: #009688;
+          background: rgba(0, 150, 136, 0.08);
+        }
+        .icon-item[data-category="Time & Calendar"] .icon {
+          color: #009688;
+        }
+
+        .icon-item[data-category="Transportation"] {
+          border-color: #8bc34a;
+          background: rgba(139, 195, 74, 0.08);
+        }
+        .icon-item[data-category="Transportation"] .icon {
+          color: #8bc34a;
+        }
+
+        .icon-item[data-category="Weather & Environment"] {
+          border-color: #00bcd4;
+          background: rgba(0, 188, 212, 0.08);
+        }
+        .icon-item[data-category="Weather & Environment"] .icon {
+          color: #00bcd4;
+        }
+
+        .icon-item[data-category="Other"] {
+          border-color: #9e9e9e;
+          background: rgba(158, 158, 158, 0.08);
+        }
+        .icon-item[data-category="Other"] .icon {
+          color: #9e9e9e;
         }
       </style>
     </head>
