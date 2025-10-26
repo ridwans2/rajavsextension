@@ -57,7 +57,15 @@ async function resolvePlaceholders(template: string): Promise<string> {
   return resolved;
 }
 
+let isActivated = false;
+
 export function activate(context: vscode.ExtensionContext) {
+  // Prevent multiple activations
+  if (isActivated) {
+    console.log('Extension already activated, skipping duplicate activation');
+    return;
+  }
+  isActivated = true;
   // Raja Snippets Manager activation
   const manager = new SnippetManager(context);
   const treeProvider = new SnippetsTreeDataProvider(manager);

@@ -50,7 +50,14 @@ async function resolvePlaceholders(template) {
     }
     return resolved;
 }
+let isActivated = false;
 function activate(context) {
+    // Prevent multiple activations
+    if (isActivated) {
+        console.log('Extension already activated, skipping duplicate activation');
+        return;
+    }
+    isActivated = true;
     // Raja Snippets Manager activation
     const manager = new snippetManager_1.SnippetManager(context);
     const treeProvider = new treeProvider_1.SnippetsTreeDataProvider(manager);
