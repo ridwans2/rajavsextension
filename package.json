@@ -3,7 +3,7 @@
     "publisher": "ridwans2",
     "displayName": "Raja VsExtension",
     "description": "Combined snippets manager and advanced folding extension for VS Code",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "icon": "images/icon.png",
     "galleryBanner": {
         "color": "#1e1e1e",
